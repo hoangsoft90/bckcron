@@ -1,0 +1,20 @@
+name: Cron every day
+
+on:
+  schedule:
+    - cron: "0 1 * * *"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-20.04
+    timeout-minutes: 720
+    steps:
+    - uses: actions/checkout@master
+    
+    - name: Run backup
+      if: success()
+      run: |
+        docker run \
+        -e APP_NAME="${{ secrets.APP_NAME }}" \
+        -e APP_TOKEN="${{ secrets.APP_TOKEN }}" \
+        huyhoang08/bckcron:latest
