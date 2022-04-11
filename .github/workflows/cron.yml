@@ -9,20 +9,19 @@ on:
       token:
         description: 'secret token'
         required: true
-        
+
 jobs:
   deploy:
     runs-on: ubuntu-20.04
     timeout-minutes: 720
-    container:
-      image: ghcr.io/hoangsoft90/bckcron:latest
-      credentials:
-         username: hoangsoft90
-         password: ${{  secrets.DOCKER_CONTAINER_REGISTRY_TOKEN }}
+    
     steps:
     - uses: actions/checkout@master
     
-    - name: Run backup
+    - name: docker registry login
+      run: echo ${{  secrets.DOCKER_CONTAINER_REGISTRY_TOKEN }} | docker login ghcr.io --username hoangsoft90 --password-stdin
+
+    - name: Run check
       if: success()
       run: |
         docker run \
